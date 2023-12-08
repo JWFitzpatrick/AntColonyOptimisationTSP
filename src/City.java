@@ -10,9 +10,8 @@ public class City {
 	public double distanceTo(City city) {
 		double xDistance = Math.abs(getX() - city.getX());
 		double yDistance = Math.abs(getY() - city.getY());
-		double distance = Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
+		return Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
 
-		return distance;
 	}
 
 	public double getX() {
