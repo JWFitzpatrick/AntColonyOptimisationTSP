@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -19,6 +17,7 @@ public class Ant {
 		path = new ArrayList<>();
 		boolean[] visited = new boolean[distanceMatrix.length];
 		int currentCity = startCity;
+		double epsilon = 1e-10; // small constant to avoid zero pheromone value
 
 		visited[currentCity] = true;
 		path.add(currentCity);
@@ -30,7 +29,7 @@ public class Ant {
 			for (int i = 0; i < distanceMatrix.length; i++) {
 				if (!visited[i]) {
 					double heuristicValue = heuristic.apply(i);
-					double pheromoneValue = graph.getPheromoneMatrix()[currentCity][i];
+					double pheromoneValue = graph.getPheromoneMatrix()[currentCity][i] + epsilon;
 					probabilities[i] = pheromoneValue * heuristicValue;
 					sum += probabilities[i];
 				}

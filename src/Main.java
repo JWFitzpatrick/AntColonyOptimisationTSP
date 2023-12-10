@@ -5,7 +5,7 @@ public class Main {
 			System.out.println("Error loading file");
 			return;
 		}
-		AntColonyOptimisation aco = new AntColonyOptimisation(problem.graph, 10000, 0.5, 100, 1, 2, 100, 1000);
+		AntColonyOptimisation aco = new AntColonyOptimisation(problem.graph, 30, 0.5, 100, 1, 3, 2, 100, 1000);
 		System.out.println(aco.getPathLength(aco.run(10000)));
 	}
 }

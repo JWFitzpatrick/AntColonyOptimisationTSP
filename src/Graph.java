@@ -40,4 +40,27 @@ public class Graph {
 			}
 		}
 	}
+
+	public void initializePheromoneMatrixMMAS() {
+		int size = this.getDistanceMatrix().length;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				pheromoneMatrix[i][j] = 1;
+			}
+		}
+	}
+
+	/**
+	 * This method goes through the pheromone matrix and ensures that no pheromone value is above 1.
+	 */
+	public void ensurePheromoneLimit() {
+		int size = this.getDistanceMatrix().length;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (pheromoneMatrix[i][j] > 1) {
+					pheromoneMatrix[i][j] = 1;
+				}
+			}
+		}
+	}
 }

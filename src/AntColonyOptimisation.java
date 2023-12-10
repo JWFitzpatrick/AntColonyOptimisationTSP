@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class AntColonyOptimisation {
 	private List<Ant> ants;
@@ -10,11 +12,12 @@ public class AntColonyOptimisation {
 	private double evaporationRate;
 	private double Q;
 	private int heuristicValue;
+	private int approachMode;
 	private int searchMode;
 	private int tabuTenure;
 	private int tabuMaxIterations;
 
-	public AntColonyOptimisation(Graph graph, int numberOfAnts, double evaporationRate, double Q, int heuristicValue) {
+	public AntColonyOptimisation(Graph graph, int numberOfAnts, double evaporationRate, double Q, int heuristicValue, int approachMode) {
 		this.ants = new ArrayList<>();
 		for (int i = 0; i < numberOfAnts; i++) {
 			this.ants.add(new Ant(i % graph.getDistanceMatrix().length));
@@ -23,10 +26,11 @@ public class AntColonyOptimisation {
 		this.evaporationRate = evaporationRate;
 		this.Q = Q;
 		this.heuristicValue = heuristicValue;
+		this.approachMode = approachMode;
 		this.searchMode = 0;
 	}
 
-	public AntColonyOptimisation(Graph graph, int numberOfAnts, double evaporationRate, double Q, int heuristicValue, int searchMode) {
+	public AntColonyOptimisation(Graph graph, int numberOfAnts, double evaporationRate, double Q, int heuristicValue, int apprachMode, int searchMode) {
 		this.ants = new ArrayList<>();
 		for (int i = 0; i < numberOfAnts; i++) {
 			this.ants.add(new Ant(i % graph.getDistanceMatrix().length));
@@ -35,13 +39,14 @@ public class AntColonyOptimisation {
 		this.evaporationRate = evaporationRate;
 		this.Q = Q;
 		this.heuristicValue = heuristicValue;
+		this.approachMode = apprachMode;
 		this.searchMode = searchMode;
 		if (this.searchMode == 2) {
-			System.out.println("You must enter the tabuTenure and max iterations without improvements to use tabuSearch.");
+			System.out.println("You must enter the tabu tenure and tabu max iterations to use tabuSearch.");
 		}
 	}
 
-	public AntColonyOptimisation(Graph graph, int numberOfAnts, double evaporationRate, double Q, int heuristicValue, int searchMode, int tabuTenure, int tabuMaxIterations) {
+	public AntColonyOptimisation(Graph graph, int numberOfAnts, double evaporationRate, double Q, int heuristicValue,int approachMode, int searchMode, int tabuTenure, int tabuMaxIterations) {
 		this.ants = new ArrayList<>();
 		for (int i = 0; i < numberOfAnts; i++) {
 			this.ants.add(new Ant(i % graph.getDistanceMatrix().length));
@@ -50,22 +55,34 @@ public class AntColonyOptimisation {
 		this.evaporationRate = evaporationRate;
 		this.Q = Q;
 		this.heuristicValue = heuristicValue;
+		this.approachMode = approachMode;
 		this.searchMode = searchMode;
 		this.tabuTenure = tabuTenure;
 		this.tabuMaxIterations = tabuMaxIterations;
 	}
 
 	public List<Integer> run(int maxIterations) {
-		this.graph.initializePheromoneMatrix();
+		if(approachMode == 1){
+			this.graph.initializePheromoneMatrixMMAS();
+		}else{
+			this.graph.initializePheromoneMatrix();
+		}
 		List<Integer> bestSolution = null;
 		double bestSolutionLength = Double.MAX_VALUE;
-
+		List<Integer> bestIterationSolution = null;
+		double bestIterationPathLength = Double.MAX_VALUE;
+		// int numberOfTopAnts = (int) Math.round(ants.size() * 0.1);
+		int numberOfTopAnts = 2;
+		PriorityQueue<Ant> topAnts = new PriorityQueue<>(numberOfTopAnts, Comparator.comparing(a -> a.getPathLength(graph)));
 		for (int iteration = 0; iteration < maxIterations; iteration++) {
+			topAnts.clear();
 			for (Ant ant : ants) {
 				ant.generatePath(graph, j -> heuristicValue / graph.getDistanceMatrix()[ant.getCurrentCity()][j]);
 			}
-			updatePheromones();
-			evaporatePheromones();
+			if (approachMode != 1 || approachMode != 3) {
+				updatePheromones();
+				evaporatePheromones();
+			}
 
 			for (Ant ant : ants) {
 				double pathLength = ant.getPathLength(graph);
@@ -73,6 +90,55 @@ public class AntColonyOptimisation {
 					bestSolution = new ArrayList<>(ant.getPath());
 					bestSolutionLength = pathLength;
 				}
+				if(approachMode == 1){
+					bestIterationSolution = null;
+					bestIterationPathLength = Double.MAX_VALUE;
+					if (pathLength < bestIterationPathLength) {
+						bestIterationSolution = new ArrayList<>(ant.getPath());
+						bestIterationPathLength = pathLength;
+					}
+				}
+				if (approachMode == 3){
+					topAnts.add(ant);
+					if (topAnts.size() > numberOfTopAnts) {
+						topAnts.poll(); 
+					}
+				}
+			}
+			if (approachMode == 1) {
+				double pheromoneToAdd = Q / bestIterationPathLength;
+				for (int i = 0; i < bestIterationSolution.size() - 1; i++) {
+					int city1 = bestIterationSolution.get(i);
+					int city2 = bestIterationSolution.get(i + 1);
+					graph.getPheromoneMatrix()[city1][city2] += pheromoneToAdd;
+					graph.getPheromoneMatrix()[city2][city1] += pheromoneToAdd;
+				}
+				evaporatePheromones();
+				graph.ensurePheromoneLimit();
+			}
+			if (approachMode == 2) {
+				double pheromoneToAdd = Q / bestSolutionLength;
+				for (int i = 0; i < bestSolution.size() - 1; i++) {
+					int city1 = bestSolution.get(i);
+					int city2 = bestSolution.get(i + 1);
+					graph.getPheromoneMatrix()[city1][city2] += pheromoneToAdd;
+					graph.getPheromoneMatrix()[city2][city1] += pheromoneToAdd;
+				}
+				evaporatePheromones();
+			}
+			if (approachMode == 3) {
+				for (Ant ant : topAnts) {
+					List<Integer> path = ant.getPath();
+					double pheromoneToAdd = Q / ant.getPathLength(graph);
+
+					for (int i = 0; i < path.size() - 1; i++) {
+						int city1 = path.get(i);
+						int city2 = path.get(i + 1);
+						graph.getPheromoneMatrix()[city1][city2] += pheromoneToAdd;
+						graph.getPheromoneMatrix()[city2][city1] += pheromoneToAdd;
+					}
+				}
+				evaporatePheromones();
 			}
 		}
 		if (this.searchMode == 1) {
@@ -135,8 +201,6 @@ public class AntColonyOptimisation {
 				break;
 			}
 		}
-		
-
 		return currentSolution;
 	}
 
