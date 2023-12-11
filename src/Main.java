@@ -1,34 +1,91 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 	public static void main(String[] args) {
-		gridSearch();
-		// if(args[0].equals("findBestParamaters")){
-		// 	gridSearch();
-		// 	return;
-		// }
-		// if (args[0].equals("calculateBestNumberOfAnts")) {
-		// 	calculateBestNumberOfAnts();
-		// 	return;
-		// }
-		// if (args[0].equals("calculateBestEvaportationRate")) {
-		// 	calculateBestEvaportationRate();
-		// 	return;
-		// }
-		// if (args[0].equals("calculateBestHeuristicValue")) {
-		// 	calculateBestHeuristicValue();
-		// 	return;
-		// }
-		// if (args[0].equals("calculateBestPheromoneValue")) {
-		// 	calculateBestPheromoneValue();
-		// 	return;
-		// }
-		// if (args[0].equals("calculateBestACOApproach")) {
-		// 	calculateBestACOApproach();
-		// 	return;
-		// }
-		// if (args[0].equals("calculateBestSearchMode")) {
-		// 	calculateBestSearchMode();
-		// 	return;
-		// }
+		if(args[0].equals("findBestParamaters")){
+			gridSearch();
+			return;
+		}
+		if (args[0].equals("calculateBestNumberOfAnts")) {
+			calculateBestNumberOfAnts();
+			return;
+		}
+		if (args[0].equals("calculateBestEvaportationRate")) {
+			calculateBestEvaportationRate();
+			return;
+		}
+		if (args[0].equals("calculateBestHeuristicValue")) {
+			calculateBestHeuristicValue();
+			return;
+		}
+		if (args[0].equals("calculateBestPheromoneValue")) {
+			calculateBestPheromoneValue();
+			return;
+		}
+		if (args[0].equals("calculateBestACOApproach")) {
+			calculateBestACOApproach();
+			return;
+		}
+		if (args[0].equals("calculateBestSearchMode")) {
+			calculateBestSearchMode();
+			return;
+		}
+		// Load the problem from the file
+		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile(args[0]);
+		if (problem == null) {
+			System.out.println("Error loading file");
+			return;
+		}
+		if (args.length == 1) {
+			AntColonyOptimisation aco = new AntColonyOptimisation(problem.graph,
+			 100, 0.3, 10, 50, 2,
+			  2, 10, 1000);
+			List<Integer> path = aco.run(10000);
+			System.out.println("Path: " + path);
+			System.out.println("Length: " + aco.getPathLength(path));
+		}
+		if (args.length == 6) {
+			int ants = Integer.parseInt(args[1]);
+			double rate = Double.parseDouble(args[2]);
+			double q = Double.parseDouble(args[3]);
+			int heuristic = Integer.parseInt(args[4]);
+			int mode = Integer.parseInt(args[5]);
+			AntColonyOptimisation aco = new AntColonyOptimisation(problem.graph, ants, rate, q,
+			 heuristic, mode);
+			List<Integer> path = aco.run(10000);
+			System.out.println("Path: " + path);
+			System.out.println("Length: " + aco.getPathLength(path));
+		}
+		if (args.length == 7) {
+			int ants = Integer.parseInt(args[1]);
+			double rate = Double.parseDouble(args[2]);
+			double q = Double.parseDouble(args[3]);
+			int heuristic = Integer.parseInt(args[4]);
+			int mode = Integer.parseInt(args[5]);
+			int searchMode = Integer.parseInt(args[6]);
+			AntColonyOptimisation aco = new AntColonyOptimisation(problem.graph, ants, rate, q,
+			 heuristic, mode, searchMode);
+			List<Integer> path = aco.run(10000);
+			System.out.println("Path: " + path);
+			System.out.println("Length: " + aco.getPathLength(path));
+		}
+		if (args.length == 9) {
+			int ants = Integer.parseInt(args[1]);
+			double rate = Double.parseDouble(args[2]);
+			double q = Double.parseDouble(args[3]);
+			int heuristic = Integer.parseInt(args[4]);
+			int mode = Integer.parseInt(args[5]);
+			int searchMode = Integer.parseInt(args[6]);
+			int tabuSize = Integer.parseInt(args[7]);
+			int tabuIterations = Integer.parseInt(args[8]);
+			AntColonyOptimisation aco = new AntColonyOptimisation(problem.graph, ants, rate, q,
+			 heuristic, mode, searchMode, tabuSize, tabuIterations);
+			List<Integer> path = aco.run(10000);
+			System.out.println("Path: " + path);
+			System.out.println("Length: " + aco.getPathLength(path));
+		}
+
 
 // 		Best length: 19921.0
 // Best number of ants: 100
@@ -54,7 +111,8 @@ public class Main {
 		int bestNumberOfAnts = 0;
 		int[] amount = {10, 50, 100, 150, 200, 250, 300, 350, 400};
 		for(int i = 0; i < amount.length; i++){
-			aco = new AntColonyOptimisation(problem.graph, amount[i], 0.5, 100, 1, 0);
+			aco = new AntColonyOptimisation(problem.graph, amount[i], 0.5, 100,
+			 1, 0);
 			double length = aco.getPathLength(aco.run(10000));
 			if(length < bestLength){
 				bestLength = length;
@@ -80,7 +138,8 @@ public class Main {
 		double bestRate = 0;
 		double[] rates = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
 		for(int i = 0; i < rates.length; i++){
-			aco = new AntColonyOptimisation(problem.graph, 50, rates[i], 100, 1, 0);
+			aco = new AntColonyOptimisation(problem.graph, 50, rates[i], 100,
+			 1, 0);
 			double length = aco.getPathLength(aco.run(10000));
 			if(length < bestLength){
 				bestLength = length;
@@ -105,7 +164,8 @@ public class Main {
 		double bestValue = 0;
 		int[] values = {1, 5, 10, 50, 100};
 		for(int i = 0; i < values.length; i++){
-			aco = new AntColonyOptimisation(problem.graph, 50, 0.5, 100, values[i], 0);
+			aco = new AntColonyOptimisation(problem.graph, 50, 0.5, 100,
+			 values[i], 0);
 			double length = aco.getPathLength(aco.run(10000));
 			if(length < bestLength){
 				bestLength = length;
@@ -131,7 +191,8 @@ public class Main {
 		double bestWeight = 0;
 		int[] values = {1, 5, 10, 50, 100};
 		for(int i = 0; i < values.length; i++){
-			aco = new AntColonyOptimisation(problem.graph, 50, 0.5, values[i], 1, 0);
+			aco = new AntColonyOptimisation(problem.graph, 50, 0.5, values[i],
+			 1, 0);
 			double length = aco.getPathLength(aco.run(10000));
 			if(length < bestLength){
 				bestLength = length;
@@ -161,7 +222,8 @@ public class Main {
 		int[] modes = {0, 1, 2, 3};
 		int bestMode = 0;
 		for(int i = 0; i < modes.length; i++){
-			aco = new AntColonyOptimisation(problem.graph, 50, 0.5, 100, 1, modes[i]);
+			aco = new AntColonyOptimisation(problem.graph, 50, 0.5, 100,
+			 1, modes[i]);
 			double length = aco.getPathLength(aco.run(10000));
 			if(length < bestLength){
 				bestLength = length;
@@ -188,9 +250,11 @@ public class Main {
 		int bestMode = 0;
 		for(int i = 0; i < modes.length; i++){
 			if(i == 2){
-				aco = new AntColonyOptimisation(problem.graph, 50, 0.5, 100, 1, 0, modes[i], 10, 1000);
+				aco = new AntColonyOptimisation(problem.graph, 50, 0.5, 100,
+				 1, 0, modes[i], 10, 1000);
 			}else {
-				aco = new AntColonyOptimisation(problem.graph, 50, 0.5, 100, 1, 0, modes[i]);
+				aco = new AntColonyOptimisation(problem.graph, 50, 0.5, 100,
+				 1, 0, modes[i]);
 			}
 			double length = aco.getPathLength(aco.run(10000));
 			if(length < bestLength){
@@ -236,9 +300,11 @@ public class Main {
 						for (int heuristicValue : heuristicValues) {
 							for (int searchMode : searchModes) {
 								if (searchMode == 2) {
-									aco = new AntColonyOptimisation(problem.graph, numberOfAnts, evaporationRate, q, heuristicValue, mode, searchMode, 10, 1000);
+									aco = new AntColonyOptimisation(problem.graph, numberOfAnts, evaporationRate,
+									 q, heuristicValue, mode, searchMode, 10, 1000);
 								}else{
-									aco = new AntColonyOptimisation(problem.graph, numberOfAnts, evaporationRate, q, heuristicValue, mode, searchMode);
+									aco = new AntColonyOptimisation(problem.graph, numberOfAnts, evaporationRate,
+									 q, heuristicValue, mode, searchMode);
 								}
 								double length = aco.getPathLength(aco.run(1000));
 								if (length < bestLength) {
