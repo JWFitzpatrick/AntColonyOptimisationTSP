@@ -85,15 +85,6 @@ public class Main {
 			System.out.println("Path: " + path);
 			System.out.println("Length: " + aco.getPathLength(path));
 		}
-
-
-// 		Best length: 19921.0
-// Best number of ants: 100
-// Best evaporation rate: 0.3
-// Best q value: 10.0
-// Best mode: 2
-// Best heuristic value: 50.0
-// Best search mode: 2
 	}
 
 
@@ -292,7 +283,6 @@ public class Main {
 
 		// Try every combination of parameter values
 		AntColonyOptimisation aco;
-		int i = 0;
 		for (int numberOfAnts : numberOfAntsValues) {
 			for (double evaporationRate : evaporationRateValues) {
 				for (double q : Q) {
@@ -316,8 +306,6 @@ public class Main {
 									bestHeuristicValue = heuristicValue;
 									bestSearchMode = searchMode;
 								}
-								System.out.println(i);
-								i++;
 							}
 						}
 					}
