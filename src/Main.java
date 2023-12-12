@@ -3,8 +3,14 @@ import java.util.List;
 
 public class Main {
 
+	// The path to the data file to use for grid search and
+	// looking at the effect of modifying parameters.
 	public static final String DATA_FILE = "../data/brazil58.xml";
 
+	/**
+	 * Main method for running the application
+	 * @param args The command line arguments
+	 */
 	public static void main(String[] args) {
 		if (args.length == 0) {
 			System.out.println("Usage: java Main <filePath>");
@@ -70,7 +76,7 @@ public class Main {
 		}
 		if (args.length == 1) {
 			AntColonyOptimisation aco = new AntColonyOptimisation(problem.graph,
-			 100, 0.3, 10, 50, 2,
+			 10, 0.5, 100, 1, 0,
 			  2, 10, 1000);
 			List<Integer> path = aco.run(10000);
 			System.out.println("Path: " + path);
@@ -297,7 +303,7 @@ public class Main {
 		}
 
 		// Define the range of values for each parameter
-		int[] numberOfAntsValues = {10, 50, 100, 150};
+		int[] numberOfAntsValues = {10, 50, 100, 150, 300};
 		double[] evaporationRateValues = {0.3, 0.5, 0.7};
 		double[] Q = {10, 50, 100};
 		int[] modes = {0, 1, 2, 3};
