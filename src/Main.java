@@ -76,7 +76,7 @@ public class Main {
 		}
 		if (args.length == 1) {
 			AntColonyOptimisation aco = new AntColonyOptimisation(problem.graph,
-			 10, 0.3, 10.0, 1, 1,
+			 10, 0.3, 100.0, 100, 0,
 			  2, 10, 1000);
 			List<Integer> path = aco.run(10000);
 			System.out.println("Path: " + path);
