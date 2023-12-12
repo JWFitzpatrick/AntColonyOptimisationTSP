@@ -2,7 +2,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+
+	public static final String DATA_FILE = "../data/brazil58.xml";
+
 	public static void main(String[] args) {
+		if (args.length == 0) {
+			System.out.println("Usage: java Main <filePath>");
+			System.out.println("Usage: java Main <filePath> <numberOfAnts> <evaporationRate> <Q> <heuristicValue> <mode>");
+			System.out.println("Usage: java Main <filePath> <numberOfAnts> <evaporationRate> <Q> <heuristicValue> <mode> <searchMode>");
+			System.out.println("Usage: java Main <filePath> <numberOfAnts> <evaporationRate> <Q> <heuristicValue> <mode> <searchMode> <tabuSize> <tabuIterations>");
+			System.out.println("Usage: java Main calculateBestNumberOfAnts");
+			System.out.println("Usage: java Main calculateBestEvaportationRate");
+			System.out.println("Usage: java Main calculateBestHeuristicValue");
+			System.out.println("Usage: java Main calculateBestPheromoneValue");
+			System.out.println("Usage: java Main calculateBestACOApproach");
+			System.out.println("Usage: java Main calculateBestSearchMode");
+			System.out.println("Usage: java Main findBestParamaters");
+			return;
+		}
+		if (args[0].equals("help")) {	
+			System.out.println("Usage: java Main <filePath>");
+			System.out.println("Usage: java Main <filePath> <numberOfAnts> <evaporationRate> <Q> <heuristicValue> <mode>");
+			System.out.println("Usage: java Main <filePath> <numberOfAnts> <evaporationRate> <Q> <heuristicValue> <mode> <searchMode>");
+			System.out.println("Usage: java Main <filePath> <numberOfAnts> <evaporationRate> <Q> <heuristicValue> <mode> <searchMode> <tabuSize> <tabuIterations>");
+			System.out.println("Usage: java Main calculateBestNumberOfAnts");
+			System.out.println("Usage: java Main calculateBestEvaportationRate");
+			System.out.println("Usage: java Main calculateBestHeuristicValue");
+			System.out.println("Usage: java Main calculateBestPheromoneValue");
+			System.out.println("Usage: java Main calculateBestACOApproach");
+			System.out.println("Usage: java Main calculateBestSearchMode");
+			System.out.println("Usage: java Main findBestParamaters");
+			return;
+		}
 		if(args[0].equals("findBestParamaters")){
 			gridSearch();
 			return;
@@ -92,7 +123,7 @@ public class Main {
 	 * Calculates the best number of ants for the ACO algorithm
 	 */
 	public static void calculateBestNumberOfAnts(){
-		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile("data/brazil58.xml");
+		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile(DATA_FILE);
 		if (problem == null) {
 			System.out.println("Error loading file");
 			return;
@@ -119,7 +150,7 @@ public class Main {
 	 * Calculates the best evaporation rate for the ACO algorith
 	 */
 	public static void calculateBestEvaportationRate() {
-		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile("data/brazil58.xml");
+		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile(DATA_FILE);
 		if (problem == null) {
 			System.out.println("Error loading file");
 			return;
@@ -145,7 +176,7 @@ public class Main {
 	 * Calculates the best heuristic value for the ACO algorithm
 	 */
 	public static void calculateBestHeuristicValue() {
-		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile("data/brazil58.xml");
+		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile(DATA_FILE);
 		if (problem == null) {
 			System.out.println("Error loading file");
 			return;
@@ -172,7 +203,7 @@ public class Main {
 	 * Calculates the best amount of pheromone to drop for the ACO algorithm
 	 */
 	public static void calculateBestPheromoneValue() {
-		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile("data/brazil58.xml");
+		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile(DATA_FILE);
 		if (problem == null) {
 			System.out.println("Error loading file");
 			return;
@@ -203,7 +234,7 @@ public class Main {
 	 * 3 - ASrank
 	 */
 	public static void calculateBestACOApproach(){
-		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile("data/brazil58.xml");
+		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile(DATA_FILE);
 		if (problem == null) {
 			System.out.println("Error loading file");
 			return;
@@ -230,7 +261,7 @@ public class Main {
 	 * Calculates the best search mode for the ACO algorithm
 	 */
 	public static void calculateBestSearchMode(){
-		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile("data/brazil58.xml");
+		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile(DATA_FILE);
 		if (problem == null) {
 			System.out.println("Error loading file");
 			return;
@@ -259,18 +290,18 @@ public class Main {
 	}
 
 	public static void gridSearch() {
-		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile("data/brazil58.xml");
+		TravellingSalesmanProblem problem = TravellingSalesmanProblem.loadFile(DATA_FILE);
 		if (problem == null) {
 			System.out.println("Error loading file");
 			return;
 		}
 
 		// Define the range of values for each parameter
-		int[] numberOfAntsValues = {50, 100, 150};
+		int[] numberOfAntsValues = {10, 50, 100, 150};
 		double[] evaporationRateValues = {0.3, 0.5, 0.7};
 		double[] Q = {10, 50, 100};
 		int[] modes = {0, 1, 2, 3};
-		int[] heuristicValues = {10, 50, 100};
+		int[] heuristicValues = {1, 10, 50, 100};
 		int[] searchModes = {0, 1, 2};
 
 		double bestLength = Double.MAX_VALUE;
@@ -291,7 +322,7 @@ public class Main {
 							for (int searchMode : searchModes) {
 								if (searchMode == 2) {
 									aco = new AntColonyOptimisation(problem.graph, numberOfAnts, evaporationRate,
-									 q, heuristicValue, mode, searchMode, 10, 1000);
+									 q, heuristicValue, mode, searchMode, 10, 10000);
 								}else{
 									aco = new AntColonyOptimisation(problem.graph, numberOfAnts, evaporationRate,
 									 q, heuristicValue, mode, searchMode);

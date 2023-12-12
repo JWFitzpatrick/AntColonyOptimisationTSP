@@ -122,10 +122,10 @@ public class AntColonyOptimisation {
 
 	/**
 	 * Runs the ant colony optimisation algorithm
-	 * @param maxIterations The maximum number of iterations to run
+	 * @param maxEvaluations The maximum number of ant evalutations to run
 	 * @return The best solution found
 	 */
-	public List<Integer> run(int maxIterations) {
+	public List<Integer> run(int maxEvaluations) {
 		// If the approach mode is MMAS then initialise the pheromone matrix
 		// with 1 for all values instead of random values.
 		if(approachMode == 1){
@@ -146,8 +146,10 @@ public class AntColonyOptimisation {
 		}
 		// Stores the top ants for ASrank approach
 		PriorityQueue<Ant> topAnts = new PriorityQueue<>(numberOfTopAnts, Comparator.comparing(a -> a.getPathLength(graph)));
-		// Run the algorithm for the specified number of iterations
-		for (int iteration = 0; iteration < maxIterations; iteration++) {
+		// Run the algorithm until a specified amount of fitness 
+		// evaluations has occured
+		int iterations = 0;
+		while(iterations < maxEvaluations) {
 			// Clears the top ants for ASrank approach
 			topAnts.clear();
 			// For each ant generate the path
@@ -163,6 +165,11 @@ public class AntColonyOptimisation {
 			// If the approach is MMAS then calculate the best solution found in the current iteration.
 			// If the approach is ASrank then get the top ants.
 			for (Ant ant : ants) {
+				// If the iterations is greater than the
+				// maximum number of evaluations then break.
+				if (iterations >= maxEvaluations) {
+					break;
+				}
 				// Gets the best solution found so far.
 				double pathLength = ant.getPathLength(graph);
 				if (pathLength < bestSolutionLength) {
@@ -185,6 +192,7 @@ public class AntColonyOptimisation {
 						topAnts.poll(); 
 					}
 				}
+				iterations++;
 			}
 			// If the approach mode is MMAS then update the pheromones with the best iteration solution.
 			if (approachMode == 1) {
