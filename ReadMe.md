@@ -13,7 +13,7 @@ When running the command, make sure you are in the same directory as the java fi
 To run the application you will need to run the following command in the terminal:
 
 ```
-java Main <input_file>
+java Main <inputFileDirectory>
 ```
 
 When running the command, make sure you are in the same directory as the compiled java files.
