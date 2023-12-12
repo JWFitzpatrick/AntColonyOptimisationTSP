@@ -48,7 +48,7 @@ public class AntColonyOptimisation {
 		}
 		// Create the ants
 		for (int i = 0; i < numberOfAnts; i++) {
-			this.ants.add(new Ant(i % graph.getDistanceMatrix().length));
+			this.ants.add(new Ant(0));
 		}
 		this.graph = graph;
 		this.evaporationRate = evaporationRate;
@@ -76,7 +76,7 @@ public class AntColonyOptimisation {
 		}
 		// Create the ants
 		for (int i = 0; i < numberOfAnts; i++) {
-			this.ants.add(new Ant(i % graph.getDistanceMatrix().length));
+			this.ants.add(new Ant(0));
 		}
 		this.graph = graph;
 		this.evaporationRate = evaporationRate;
@@ -108,7 +108,7 @@ public class AntColonyOptimisation {
 			numberOfAnts = 1;
 		}
 		for (int i = 0; i < numberOfAnts; i++) {
-			this.ants.add(new Ant(i % graph.getDistanceMatrix().length));
+			this.ants.add(new Ant(0));
 		}
 		this.graph = graph;
 		this.evaporationRate = evaporationRate;

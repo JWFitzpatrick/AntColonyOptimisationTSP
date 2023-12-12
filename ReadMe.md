@@ -35,12 +35,12 @@ numberOfAnts - The number of ants to be used in the application.
 evaporationRate - The evaporation rate to be used in the application.
 Q - The amount of pheromone to be deposited for each ant.
 heuristicValue - The value to be used for the heuristic function.
-mode:
+mode (The approach to be used):
 0 = Standard ACO,
 1 = MMAS,
 2 = Rank-based Ant System,
 3 = Elitist Ant System
-searchMode:
+searchMode (The local search to be used):
 0 = No Search,
 1 = Hill Climbing,
 2 = Tabu Search
