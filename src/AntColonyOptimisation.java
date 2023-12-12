@@ -150,6 +150,9 @@ public class AntColonyOptimisation {
 		// evaluations has occured
 		int iterations = 0;
 		while(iterations < maxEvaluations) {
+			//Reset the best iteration solution
+			bestIterationSolution = null;
+			bestIterationPathLength = Double.MAX_VALUE;
 			// Clears the top ants for ASrank approach
 			topAnts.clear();
 			// For each ant generate the path
@@ -178,8 +181,6 @@ public class AntColonyOptimisation {
 				}
 				// Gets the best solution found in the current iteration.
 				if(approachMode == 1){
-					bestIterationSolution = null;
-					bestIterationPathLength = Double.MAX_VALUE;
 					if (pathLength < bestIterationPathLength) {
 						bestIterationSolution = new ArrayList<>(ant.getPath());
 						bestIterationPathLength = pathLength;

@@ -115,4 +115,8 @@ public class Ant {
 		}
 		return length;
 	}
+
+	public void setPath(List<Integer> path) {
+		this.path = path;
+	}
 }
