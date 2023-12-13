@@ -83,6 +83,7 @@ public class Ant {
 			path.add(nextCity);
 			currentCity = nextCity;
 		}
+		path.add(startCity);
 	}
 
 	/**

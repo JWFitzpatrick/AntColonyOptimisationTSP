@@ -282,7 +282,8 @@ public class AntColonyOptimisation {
 	 * @return The best solution found
 	 */
 	public List<Integer> hillClimbingSearch(List<Integer> initialSolution) {
-		if (initialSolution == null) {
+		System.out.println(initialSolution);
+		if (initialSolution == null || initialSolution.isEmpty()) {
 			return new ArrayList<>();
 		}
 		// Copy the initial solution to start the search
@@ -296,9 +297,9 @@ public class AntColonyOptimisation {
 			List<Integer> bestNeighbor = null;
 			double bestNeighborLength = Double.MAX_VALUE;
 
-			// Iterate over all pairs of cities in the current solution
-			for (int i = 0; i < currentSolution.size() - 1; i++) {
-				for (int j = i + 1; j < currentSolution.size(); j++) {
+			// Iterate over all pairs of cities in the current solution, excluding the first and last city
+			for (int i = 1; i < currentSolution.size() - 2; i++) {
+				for (int j = i + 1; j < currentSolution.size() - 1; j++) {
 					// Create a neighbor solution by swapping two cities
 					List<Integer> neighbor = new ArrayList<>(currentSolution);
 					Collections.swap(neighbor, i, j);
@@ -323,6 +324,7 @@ public class AntColonyOptimisation {
 			}
 		}
 		// Return the best solution found
+		System.out.println(currentSolution);
 		return currentSolution;
 	}
 	/**
@@ -347,9 +349,9 @@ public class AntColonyOptimisation {
 			List<Integer> bestNeighbor = null;
 			double bestNeighborLength = Double.MAX_VALUE;
 
-			// Iterate over all pairs of cities in the current solution
-			for (int i = 0; i < currentSolution.size() - 1; i++) {
-				for (int j = i + 1; j < currentSolution.size(); j++) {
+			// Iterate over all pairs of cities in the current solution, excluding the first and last city
+			for (int i = 1; i < currentSolution.size() - 2; i++) {
+				for (int j = i + 1; j < currentSolution.size() - 1; j++) {
 					// Create a neighbor solution by swapping two cities
 					List<Integer> neighbor = new ArrayList<>(currentSolution);
 					Collections.swap(neighbor, i, j);
@@ -381,7 +383,6 @@ public class AntColonyOptimisation {
 				tabuList.remove(0);
 			}
 		}
-
 		// Return the best solution found
 		return currentSolution;
 	}
