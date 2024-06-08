@@ -1,4 +1,4 @@
-#University Project. Certain parts of this application had to be implemented in specific ways to meet mark scheme
+## University Project. Certain parts of this application had to be implemented in specific ways to meet mark scheme
 
 ## How to compile
 
